@@ -1,32 +1,36 @@
 pipeline {
+
     agent any
 
     stages {
-        stage ('Compile Stage') {
 
+        stage ('Git clone') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean install'
-                }
+                git(
+                    url: "https://github.com/Mikadows/jenkins-example.git",
+                    branch: "${BRANCHE}"
+                )
             }
         }
 
-        stage ('Testing Stage') {
-
+        stage ('Maven Test') {
             steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
-                }
+                sh "mvn test"
             }
         }
 
-        stage('Generate HTML report') {
+        stage ('Maven build') {
+            steps {
+                sh "mvn package"
+            }
+        }
+
+        stage('Generate cucumber report') {
             steps {
                 cucumber buildStatus: "UNSTABLE",
-                        fileIncludePattern: '**/cucumber.json',
-                        jsonReportDirectory: 'target'
+                         fileIncludePattern: '**/cucumber.json',
+                         jsonReportDirectory: 'target'
             }
-
         }
     }
 }
