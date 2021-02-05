@@ -8,7 +8,7 @@ pipeline {
             steps {
                 git(
                     url: "https://github.com/Mikadows/jenkins-example.git",
-                    branch: "${BRANCHE}"
+                    branch: "feature-test-pipeline-cucumber"
                 )
             }
         }
